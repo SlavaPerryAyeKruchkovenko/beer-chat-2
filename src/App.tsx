@@ -7,7 +7,7 @@ function App() {
     return (
         <Routes>
             <Route path="*" element={<div>error</div>}/>
-            <Route path="/login" element={<AuthPage/>}/>
+            <Route path="/auth" element={<AuthPage/>}/>
         </Routes>
     );
 }

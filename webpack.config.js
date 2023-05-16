@@ -84,7 +84,7 @@ module.exports = {
                 ],
             },
             {
-                test: /\.(svg|png|jpe?g|gif)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(svg|png|jpe?g|gif|jpg)(\?v=\d+\.\d+\.\d+)?$/,
                 use:
                     [
                         {
