@@ -1,157 +1,130 @@
 import React from "react";
 import "./AuthPage.sass";
 import beachImage from "@Assets/images/beach-back.jpg";
+import {X} from "react-feather";
 
 const AuthPage = () => {
-    /*
-    * $(function() {
-
-   $(".alt-2").click(function() {
-      if (!$(this).hasClass('material-button')) {
-         $(".shape").css({
-            "width": "100%",
-            "height": "100%",
-            "transform": "rotate(0deg)"
-         })
-
-         setTimeout(function() {
-            $(".overbox").css({
-               "overflow": "initial"
-            })
-         }, 600)
-
-         $(this).animate({
-            "width": "140px",
-            "height": "140px"
-         }, 500, function() {
-            $(".box").removeClass("back");
-
-            $(this).removeClass('active')
-         });
-
-         $(".overbox .title").fadeOut(300);
-         $(".overbox .input").fadeOut(300);
-         $(".overbox .button").fadeOut(300);
-
-         $(".alt-2").addClass('material-buton');
-      }
-
-   })
-
-   $(".material-button").click(function() {
-
-      if ($(this).hasClass('material-button')) {
-         setTimeout(function() {
-            $(".overbox").css({
-               "overflow": "hidden"
-            })
-            $(".box").addClass("back");
-         }, 200)
-         $(this).addClass('active').animate({
-            "width": "700px",
-            "height": "700px"
-         });
-
-         setTimeout(function() {
-            $(".shape").css({
-               "width": "50%",
-               "height": "50%",
-               "transform": "rotate(45deg)"
-            })
-
-            $(".overbox .title").fadeIn(300);
-            $(".overbox .input").fadeIn(300);
-            $(".overbox .button").fadeIn(300);
-         }, 700)
-
-         $(this).removeClass('material-button');
-
-      }
-
-      if ($(".alt-2").hasClass('material-buton')) {
-         $(".alt-2").removeClass('material-buton');
-         $(".alt-2").addClass('material-button');
-      }
-
-   });
-
-});
-    * */
     const [login, setLogin] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [repeatPassword, setRepeatPassword] = React.useState("");
+    const [name, setName] = React.useState("");
+    const [isLogin, setIsLogin] = React.useState(true)
 
-    const onInputFocus = React.useCallback((e: any) => {
-        e.target.parentNode.classList.add("form-item-focus");
-    }, []);
-    const onBlur = React.useCallback((e: any) => {
-        if (e.target.value === "") {
-            e.target.parentNode.classList.remove("form-item-focus");
-        }
-    }, []);
     const loginSubmit = React.useCallback((e: any) => {
         e.preventDefault();
-    }, [])
+    }, []);
+    const registerSubmit = React.useCallback((e: any) => {
+        e.preventDefault();
+    }, []);
     const authStyle = {
         backgroundImage: `url(${beachImage})`
     }
     return (
         <div className={"auth-page"} style={authStyle}>
             <div className={"auth-page-container"}>
-                <form className={"login-page-form"}>
+                {isLogin ? (<form className={"login-page-form"} onSubmit={loginSubmit}>
                     <div className={"title"}>LOGIN</div>
-                    <div className={"form-item"}>
+                    <div className={"form-item " + (login.length && "form-item-focus")}>
                         <label htmlFor={"login"}>Login</label>
                         <input
+                            required={true}
                             value={login}
                             onChange={(e) => setLogin(e.target.value)}
                             type={"text"}
                             name={"login"}
-                            id={"login"}
-                            onFocus={onInputFocus}
-                            onBlur={onBlur}/>
+                            minLength={5}
+                            maxLength={24}
+                            id={"login"}/>
                         <span className={"spin"}/>
                     </div>
-                    <div className={"form-item"}>
+                    <div className={"form-item " + (password.length && "form-item-focus")}>
                         <label htmlFor={"password"}>Password</label>
                         <input
+                            required={true}
                             type={"password"}
                             name={"password"}
                             id={"password"}
+                            minLength={8}
+                            maxLength={24}
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            onFocus={onInputFocus}
-                            onBlur={onBlur}/>
+                            onChange={(e) => setPassword(e.target.value)}/>
                         <span className={"spin"}/>
                     </div>
                     <div className={"submit-btn login"}>
-                        <button type={"submit"} onClick={loginSubmit}>
+                        <button type={"submit"}>
                             <span>SUBMIT</span>
                         </button>
                     </div>
                     <a href="#" className="pass-forgot">Forgot your password?</a>
-                </form>
-                <form className={"register-page-form"}>
-                    <div className="material-button alt-2"><span className="shape"/></div>
-                    <div className={"title"}>REGISTER</div>
-                    <div className={"form-item"}>
+                    <div className="material-button alt-2" onClick={() => setIsLogin(false)}>
+                        <span className="shape"/>
+                    </div>
+                </form>) : (<form className={"register-page-form"} onSubmit={registerSubmit}>
+                    <div className={"header"}>
+                        <div className={"title"}>REGISTER</div>
+                        <X className={"close"}
+                           onClick={() => setIsLogin(true)}
+                        />
+                    </div>
+                    <div className={"form-item " + (login.length && "form-item-focus")}>
                         <label htmlFor={"registration-login"}>Login</label>
-                        <input type={"text"} name={"registration-login"} id={"registration-login"}/>
+                        <input
+                            required={true}
+                            minLength={5}
+                            maxLength={24}
+                            value={login}
+                            onChange={(e) => setLogin(e.target.value)}
+                            type={"text"}
+                            name={"registration-login"}
+                            id={"registration-login"}
+                        />
                         <span className={"spin"}/>
                     </div>
-                    <div className={"form-item"}>
+                    <div className={"form-item " + (name.length && "form-item-focus")}>
+                        <label htmlFor={"registration-name"}>Name</label>
+                        <input
+                            required={true}
+                            minLength={1}
+                            maxLength={24}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            type={"text"}
+                            name={"registration-name"}
+                            id={"registration-name"}
+                        />
+                        <span className={"spin"}/>
+                    </div>
+                    <div className={"form-item " + (password.length && "form-item-focus")}>
                         <label htmlFor={"registration-password"}>Password</label>
-                        <input type="password" name={"registration-password"} id={"registration-password"}/>
+                        <input
+                            required={true}
+                            minLength={5}
+                            maxLength={24}
+                            type={"password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            name={"registration-password"}
+                            id={"registration-password"}
+                        />
                         <span className={"spin"}/>
                     </div>
-                    <div className={"form-item"}>
+                    <div className={"form-item " + (repeatPassword.length && "form-item-focus")}>
                         <label htmlFor={"repeat-password"}>Repeat Password</label>
-                        <input type="password" name={"repeat-password"} id={"repeat-password"}/>
+                        <input
+                            required={true}
+                            minLength={5}
+                            maxLength={24}
+                            value={repeatPassword}
+                            onChange={(e) => setRepeatPassword(e.target.value)}
+                            type="password"
+                            name={"repeat-password"}
+                            id={"repeat-password"}/>
                         <span className={"spin"}/>
                     </div>
-                    <div className={"submit-btn"}>
-                        <button><span>NEXT</span></button>
+                    <div className={"submit-btn register"}>
+                        <button type={"submit"}><span>REGISTER</span></button>
                     </div>
-                </form>
+                </form>)}
             </div>
         </div>
     );
