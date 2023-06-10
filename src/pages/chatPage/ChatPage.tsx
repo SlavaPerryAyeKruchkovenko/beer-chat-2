@@ -38,13 +38,15 @@ const ChatPage = () => {
     }
     const sendMessage = async (e: any) => {
         e.preventDefault()
+        console.log("send message on back",{ selectedUser, message })
         await connection.invoke("SendMessage", { selectedUser, message });
     }
     useEffect(()=>{
         connection.on("SendMessage", (message) => {
-            console.log(message);
+            console.log("message from back",message);
         });
         connection.onclose(() => {
+            console.log("connection close")
             setUserMessages([]);
             setUsers([]);
         });
