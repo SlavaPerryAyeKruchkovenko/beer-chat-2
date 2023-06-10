@@ -38,7 +38,7 @@ const ChatPage = () => {
     }
     const sendMessage = async (e: any) => {
         e.preventDefault()
-        await connection.invoke("JoinRoom", { selectedUser, message });
+        await connection.invoke("SendMessage", { selectedUser, message });
     }
     useEffect(()=>{
         connection.on("SendMessage", (message) => {
