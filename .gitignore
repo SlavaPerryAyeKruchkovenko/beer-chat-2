@@ -1,5 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-./.idea
+/.idea
 # dependencies
 /node_modules
 /.pnp
@@ -24,3 +24,5 @@ yarn-error.log*
 /.idea/jsLibraryMappings.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
+/.idea/beer-chat-2.iml
+/.idea/modules.xml
