@@ -3,9 +3,6 @@ import {apiUrl} from "@Helpers/constants";
 
 export const joinRoom = (userId: string) => {
     return new HubConnectionBuilder()
-        .withUrl(apiUrl + `socket?userId=${userId}`, {
-            skipNegotiation: true,
-            transport: signalR.HttpTransportType.WebSockets
-        })
+        .withUrl(apiUrl + `socket?userId=${userId}`)
         .build();
 }
