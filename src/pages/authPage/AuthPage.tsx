@@ -21,9 +21,9 @@ const AuthPage = () => {
         window.localStorage.setItem("token",res.data.jwt);
         dispatch(setToken(res.data.jwt));
         dispatch(setUser({
-            Id: res.data.user.id,
-            Name: res.data.user.name,
-            Login: res.data.user.Login
+            id: res.data.user.id,
+            name: res.data.user.name,
+            login: res.data.user.Login
         }));
         navigate("/chat")
     }
@@ -43,9 +43,9 @@ const AuthPage = () => {
     const registerSubmit = React.useCallback((e: any) => {
         e.preventDefault();
         const user: User = {
-            Id: "1",
-            Name: name,
-            Login: login,
+            id: "1",
+            name: name,
+            login: login,
         }
         apiManager.register(user, password).then(res => {
             initUser(res)
