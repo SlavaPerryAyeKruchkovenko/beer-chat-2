@@ -77,6 +77,8 @@ const ChatPage = () => {
             if (res.data) {
                 console.log("all users",res.data);
             }
+        }).catch(e => {
+            console.log("get all user error", e)
         })
     }, []);
     return <div className={"chat-page"}>

@@ -4,7 +4,7 @@ import User from "@Models/User";
 
 class ApiManager {
     getAllUsers() {
-        return axios.get(apiUrl + "api/user/users")
+        return axios.get(apiUrl + "api/User/users")
     }
 
     login(login: string, password: string) {

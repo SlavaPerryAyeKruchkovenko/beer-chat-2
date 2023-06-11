@@ -36,7 +36,6 @@ const AuthPage = () => {
         }).catch(e => {
             setLogin("")
             setPassword("")
-            console.log("login error", e)
         })
     }, [initUser, login, password]);
     const registerSubmit = React.useCallback((e: any) => {
@@ -51,7 +50,6 @@ const AuthPage = () => {
         }).catch(e => {
             setLogin("")
             setPassword("")
-            console.log("register error", e)
         })
     }, [initUser, login, name, password]);
     const authStyle = {
