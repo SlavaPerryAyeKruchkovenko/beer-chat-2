@@ -1,12 +1,11 @@
-import { HubConnectionBuilder } from '@aspnet/signalr';
+import signalR, {HubConnectionBuilder} from '@aspnet/signalr';
 import {apiUrl} from "@Helpers/constants";
 
-export const connection = new HubConnectionBuilder()
-    .withUrl(apiUrl+'socket')
-    .build();
-
-export const startSignalRConnection = () => {
-    connection.start()
-        .then(() => console.log('SignalR Connected'))
-        .catch(err => console.error('SignalR Connection Error: ', err));
+export const joinRoom = (userId: string) => {
+    return new HubConnectionBuilder()
+        .withUrl(apiUrl + `socket?userId=${userId}`, {
+            skipNegotiation: true,
+            transport: signalR.HttpTransportType.WebSockets
+        })
+        .build();
 }

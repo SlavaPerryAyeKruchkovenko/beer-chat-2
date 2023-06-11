@@ -2,79 +2,89 @@ import React, {useEffect, useState} from "react"
 import "./ChatPage.sass"
 // @ts-ignore
 import {FilePlus, Search} from 'feather-icons-react';
-import User from "@Models/User";
 import apiManager from "@Helpers/apiManager";
-import {connection} from "@Helpers/socketManager";
+import {joinRoom} from "@Helpers/socketManager";
 import {useSelector} from "react-redux";
 import {RootState} from "@Helpers/toolkitRedux";
 import {useNavigate} from "react-router-dom";
+import Chat from "@Models/Chat";
+import {HubConnection} from "@aspnet/signalr";
 
 const ChatPage = () => {
-    const [userMessages, setUserMessages] = useState([])
-    const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
-    const [users, setUsers] = useState<User[]>([])
+    const [chats, setChats] = useState<Chat[]>([])
+    const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
     const [message, setMessage] = useState("");
-
+    const [connection, setConnection] = useState<HubConnection | undefined>(undefined)
     const token = useSelector((state: RootState) => state.toolkit.token);
     const navigate = useNavigate();
     const userMe = useSelector((state: RootState) => state.toolkit.user);
 
-    const getUserProfile = (user: User) => {
-        const avatarUrl = `https://www.gravatar.com/avatar/${user.Login}?d=https://ui-avatars.com/api/${user.Name}/128/random`
-        return <div className={"user-profile"} id={user.Id} key={user.Id} onClick={() => selectUser(user)}>
+    const getChatProfile = (chat: Chat) => {
+        const avatarUrl = `https://www.gravatar.com/avatar/${chat.title}?d=https://ui-avatars.com/api/${chat.title}/128/random`
+        return <div className={"user-profile"} id={chat.id} key={chat.id} onClick={() => selectChat(chat)}>
             <img src={avatarUrl} alt={"image"} className={"user-image"}/>
             <div className={"info-bloc"}>
-                <span>{user.Name}</span>
-                <span className={"login-user"}>{user.Login}</span>
+                <span>{chat.title}</span>
             </div>
         </div>
     }
     const getHeader = () => {
-        if (selectedUser) {
-            const avatarUrl = `https://www.gravatar.com/avatar/${selectedUser.Login}?d=https://ui-avatars.com/api/${selectedUser.Name}/128/random`
+        if (selectedChat) {
+            const avatarUrl = `https://www.gravatar.com/avatar/${selectedChat.title}?d=https://ui-avatars.com/api/${selectedChat.title}/128/random`
             return <>
                 <img src={avatarUrl} alt={"image"} className={"user-image"}/>
                 <div className={"info-bloc"}>
-                    <span>{selectedUser.Name}</span>
-                    <span className={"description"}>{selectedUser.Login}</span>
+                    <span>{selectedChat.title}</span>
                 </div>
             </>
         }
     }
-    const selectUser = (user: User) => {
-        setSelectedUser(user);
+    const selectChat = (chat: Chat) => {
+        if (userMe) {
+            setSelectedChat(chat);
+            const connect = joinRoom(userMe.Id)
+
+            connect.start().then(() => {
+                console.log('SignalR Connected')
+                setConnection(connect)
+            }).catch(err => console.error('SignalR Connection Error: ', err));
+        }
     }
+
     const sendMessage = async (e: any) => {
         e.preventDefault()
-        console.log("send message on back", {selectedUser, message})
-        await connection.invoke("SendMessage", {selectedUser, message});
+        if (selectedChat && connection) {
+            const chatId = selectedChat.id
+            await connection.invoke("SendMessage", {chatId, message});
+        }
     }
     useEffect(() => {
-        connection.on("SendMessage", (message) => {
-            console.log("message from back", message);
-        });
-        connection.onclose(() => {
-            console.log("connection close")
-            setUserMessages([]);
-            setUsers([]);
-        });
-    }, [])
+        if(connection){
+            connection.on("SendMessage", (message) => {
+                console.log("message from back", message);
+            });
+            connection.onclose(() => {
+                console.log("connection close")
+            });
+        }
+    }, [connection])
 
     useEffect(() => {
         console.log("current user", userMe)
         if (userMe && token) {
             apiManager.getAllChats(userMe.Id, token).then(res => {
                 if (res.data) {
-                    console.log(res.data)
+                    console.log("chat from back", res.data)
+                    console.log("chat after cast", res.data as Chat[])
+                    setChats(res.data as Chat[])
                 }
             }).catch(e => {
                 console.log("get all chat error", e)
             })
         }
-        setUsers([{Id: "1", Name: "Danil", Login: "not_lizard"}, {Id: "2", Name: "Nad9", Login: "baikal"}])
     }, [navigate, token, userMe]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (token) {
             apiManager.getAllUsers(token).then(res => {
                 if (res.data) {
@@ -84,15 +94,15 @@ const ChatPage = () => {
                 console.log("get all user error", e)
             })
         }
-    }, [token]);
+    }, [token]);*/
     return <div className={"chat-page"}>
         <div className={"user-column"}>
             <div className={"search-bar"}>
                 <input type={"text"} maxLength={30}/>
                 <Search className={"search"}/>
             </div>
-            <ul className={"user-block"}>
-                {users.map(getUserProfile)}
+            <ul className={"chats-block"}>
+                {chats.map(getChatProfile)}
             </ul>
         </div>
         <div className={"chat-block"}>
