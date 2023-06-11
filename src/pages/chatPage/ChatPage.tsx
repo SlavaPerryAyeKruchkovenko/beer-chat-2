@@ -43,7 +43,7 @@ const ChatPage = () => {
         if (userMe) {
             setSelectedChat(chat);
             const connect = joinRoom(userMe.Id)
-
+            console.log(connect)
             connect.start().then(() => {
                 console.log('SignalR Connected')
                 setConnection(connect)
@@ -70,16 +70,11 @@ const ChatPage = () => {
     }, [connection])
 
     useEffect(() => {
-        console.log("current user", userMe)
         if (userMe && token) {
             apiManager.getAllChats(userMe.Id, token).then(res => {
                 if (res.data) {
-                    console.log("chat from back", res.data)
-                    console.log("chat after cast", res.data as Chat[])
                     setChats(res.data as Chat[])
                 }
-            }).catch(e => {
-                console.log("get all chat error", e)
             })
         }
     }, [navigate, token, userMe]);
