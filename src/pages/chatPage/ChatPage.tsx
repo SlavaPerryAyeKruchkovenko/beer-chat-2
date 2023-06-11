@@ -10,19 +10,21 @@ import {useNavigate} from "react-router-dom";
 import Chat from "@Models/Chat";
 import {HubConnection} from "@aspnet/signalr";
 import Message from "@Models/Message";
+import MessageComponent from "@Components/MessageComponent";
+import generateAvatar from "@Helpers/avatarGenerate";
 
 const ChatPage = () => {
     const [chats, setChats] = useState<Chat[]>([])
     const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
     const [message, setMessage] = useState("");
-    const [messages,setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<Message[]>([])
     const [connection, setConnection] = useState<HubConnection | undefined>(undefined)
     const token = useSelector((state: RootState) => state.toolkit.token);
     const navigate = useNavigate();
     const userMe = useSelector((state: RootState) => state.toolkit.user);
 
     const getChatProfile = (chat: Chat) => {
-        const avatarUrl = `https://www.gravatar.com/avatar/${chat.title}?d=https://ui-avatars.com/api/${chat.title}/128/random`
+        const avatarUrl = generateAvatar(chat.title, chat.title);
         return <div className={"user-profile"} id={chat.id} key={chat.id} onClick={() => selectChat(chat)}>
             <img src={avatarUrl} alt={"image"} className={"user-image"}/>
             <div className={"info-bloc"}>
@@ -32,7 +34,7 @@ const ChatPage = () => {
     }
     const getHeader = () => {
         if (selectedChat) {
-            const avatarUrl = `https://www.gravatar.com/avatar/${selectedChat.title}?d=https://ui-avatars.com/api/${selectedChat.title}/128/random`
+            const avatarUrl = generateAvatar(selectedChat.title, selectedChat.title);
             return <>
                 <img src={avatarUrl} alt={"image"} className={"user-image"}/>
                 <div className={"info-bloc"}>
@@ -48,14 +50,14 @@ const ChatPage = () => {
         }
         setSelectedChat(chat);
         const connect = joinRoom(chat.id)
-        console.log(connect)
         connect.start().then(() => {
             console.log('SignalR Connected')
             setConnection(connect)
-            if(token){
-                apiManager.getAllChatMessage(token,chat.id).then(res => {
-                    if(res.data){
-                        console.log(res.data)
+            if (token) {
+                apiManager.getAllChatMessage(token, chat.id).then(res => {
+                    if (res.data) {
+                        console.log(res.data as Message[])
+                        setMessages(res.data as Message[])
                     }
                 })
             }
@@ -83,6 +85,7 @@ const ChatPage = () => {
         if (connection) {
             connection.on("SendMessage", (message) => {
                 console.log("message from back", message);
+                setMessages(value => [...value, message as Message])
             });
             connection.onclose(() => {
                 console.log("connection close")
@@ -99,7 +102,6 @@ const ChatPage = () => {
             })
         }
     }, [navigate, token, userMe]);
-
     /*useEffect(() => {
         if (token) {
             apiManager.getAllUsers(token).then(res => {
@@ -126,7 +128,7 @@ const ChatPage = () => {
                 {getHeader()}
             </div>
             <div className={"messenger"}>
-
+                {messages.map(x => <MessageComponent message={x} key={x.id}/>)}
             </div>
             <form className={"messenger-input"} onSubmit={sendMessage}>
                 <textarea

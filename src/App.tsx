@@ -12,6 +12,7 @@ function App() {
     const dispatch = useDispatch();
     useEffect(() => {
         navigate("/auth")
+
         /*const token = localStorage.getItem("token");
         if(token){
             dispatch(setToken(token));
