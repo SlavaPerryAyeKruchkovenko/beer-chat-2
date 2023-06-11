@@ -7,13 +7,15 @@ import apiManager from "@Helpers/apiManager";
 import {connection} from "@Helpers/socketManager";
 import {useSelector} from "react-redux";
 import {RootState} from "@Helpers/toolkitRedux";
+import {useNavigate} from "react-router-dom";
 
 const ChatPage = () => {
     const [userMessages, setUserMessages] = useState([])
     const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
     const [users, setUsers] = useState<User[]>([])
     const [message,setMessage] = useState("");
-    
+
+    const navigate = useNavigate();
     const userMe = useSelector((state: RootState) => state.toolkit.user);
     
     const getUserProfile = (user: User) => {
@@ -57,8 +59,8 @@ const ChatPage = () => {
         });
     },[])
 
-
     useEffect(() => {
+        console.log("current user",userMe)
         if(userMe){
             apiManager.getAllChats(userMe.Id).then(res => {
                 if(res.data){
@@ -68,9 +70,11 @@ const ChatPage = () => {
                 console.log("get all chat error", e)
             })
         }
-       
+        else{
+            navigate("/auth")
+        }
         setUsers([{Id: "1", Name: "Danil", Login: "not_lizard"}, {Id: "2", Name: "Nad9", Login: "baikal"}])
-    }, [userMe]);
+    }, [navigate, userMe]);
 
     useEffect(() => {
         apiManager.getAllUsers().then(res => {

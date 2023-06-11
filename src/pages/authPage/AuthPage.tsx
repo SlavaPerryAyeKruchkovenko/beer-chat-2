@@ -20,11 +20,11 @@ const AuthPage = () => {
     const initUser = (res: any) => {
         window.localStorage.setItem("token",res.data.jwt);
         dispatch(setToken(res.data.jwt));
-        setUser({
+        dispatch(setUser({
             Id: res.data.user.id,
             Name: res.data.user.name,
             Login: res.data.user.Login
-        });
+        }));
         navigate("/chat")
     }
     const loginSubmit = React.useCallback((e: any) => {
