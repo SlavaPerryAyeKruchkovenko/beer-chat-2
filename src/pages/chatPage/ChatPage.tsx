@@ -69,7 +69,7 @@ const ChatPage = () => {
             const val = {
                 id: "1",
                 text: message,
-                userId: userMe.Id,
+                userId: userMe.id,
                 chatroomId: selectedChat.id
             }
             apiManager.sendMessage(token, val).then(res => {
@@ -94,7 +94,7 @@ const ChatPage = () => {
 
     useEffect(() => {
         if (userMe && token) {
-            apiManager.getAllChats(userMe.Id, token).then(res => {
+            apiManager.getAllChats(userMe.id, token).then(res => {
                 if (res.data) {
                     setChats(res.data as Chat[])
                 }

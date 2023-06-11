@@ -1,6 +1,6 @@
 interface User{
-    Id:string,
-    Name:string
-    Login: string
+    id:string,
+    name:string
+    login: string
 }
 export default User

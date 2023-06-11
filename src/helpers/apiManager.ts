@@ -16,8 +16,8 @@ class ApiManager {
     }
     register(user:User,password: string){
         return axios.post(apiUrl + "api/Auth/reg", {
-            name : user.Name,
-            login: user.Login,
+            name : user.name,
+            login: user.login,
             password: password
         },this.getDefaultConfig())
     }
