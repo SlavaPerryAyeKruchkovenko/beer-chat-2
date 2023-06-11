@@ -1,9 +1,8 @@
 import { HubConnectionBuilder } from '@aspnet/signalr';
-import apiManager from "@Helpers/apiManager";
 import {apiUrl} from "@Helpers/constants";
 
 export const connection = new HubConnectionBuilder()
-    .withUrl(apiUrl+'chat')
+    .withUrl(apiUrl+'socket')
     .build();
 
 export const startSignalRConnection = () => {

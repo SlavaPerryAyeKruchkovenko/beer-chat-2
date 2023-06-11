@@ -2,6 +2,8 @@ import React from "react";
 import "./AuthPage.sass";
 import beachImage from "@Assets/images/beach-back.jpg";
 import {X} from "react-feather";
+import apiManager from "@Helpers/apiManager";
+import User from "@Models/User";
 
 const AuthPage = () => {
     const [login, setLogin] = React.useState("");
@@ -12,10 +14,29 @@ const AuthPage = () => {
 
     const loginSubmit = React.useCallback((e: any) => {
         e.preventDefault();
-    }, []);
+        apiManager.login(login, password).then(res => {
+            console.log(res.data)
+        }).catch(e => {
+            setLogin("")
+            setPassword("")
+            console.log("login error", e)
+        })
+    }, [login, password]);
     const registerSubmit = React.useCallback((e: any) => {
         e.preventDefault();
-    }, []);
+        const user: User = {
+            Id: "1",
+            Name: name,
+            Login: login,
+        }
+        apiManager.register(user, password).then(res => {
+            console.log(res.data)
+        }).catch(e => {
+            setLogin("")
+            setPassword("")
+            console.log("register error", e)
+        })
+    }, [login, name, password]);
     const authStyle = {
         backgroundImage: `url(${beachImage})`
     }
