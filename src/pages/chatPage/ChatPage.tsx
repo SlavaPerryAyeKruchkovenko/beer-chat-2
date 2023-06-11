@@ -43,20 +43,19 @@ const ChatPage = () => {
         if(connection){
             connection.stop().then(()=>console.log("close"))
         }
-        if (userMe) {
-            setSelectedChat(chat);
-            const connect = joinRoom(userMe.Id)
-            console.log(connect)
-            connect.start().then(() => {
-                console.log('SignalR Connected')
-                setConnection(connect)
-            }).catch(err => console.error('SignalR Connection Error: ', err));
-        }
+        setSelectedChat(chat);
+        const connect = joinRoom(chat.id)
+        console.log(connect)
+        connect.start().then(() => {
+            console.log('SignalR Connected')
+            setConnection(connect)
+        }).catch(err => console.error('SignalR Connection Error: ', err));
     }
 
     const sendMessage = async (e: any) => {
         e.preventDefault()
         if (selectedChat && connection) {
+            setMessage("")
             const chatId = selectedChat.id
             await connection.invoke("SendMessage", chatId, message);
         }
