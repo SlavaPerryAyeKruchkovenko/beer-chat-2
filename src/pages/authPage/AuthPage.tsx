@@ -14,6 +14,7 @@ const AuthPage = () => {
 
     const loginSubmit = React.useCallback((e: any) => {
         e.preventDefault();
+        console.log("password",password)
         apiManager.login(login, password).then(res => {
             console.log(res.data)
         }).catch(e => {
@@ -29,6 +30,7 @@ const AuthPage = () => {
             Name: name,
             Login: login,
         }
+        console.log("password",password)
         apiManager.register(user, password).then(res => {
             console.log(res.data)
         }).catch(e => {
