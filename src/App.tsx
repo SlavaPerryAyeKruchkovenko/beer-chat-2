@@ -12,7 +12,6 @@ function App() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     useEffect(() => {
-        navigate("/auth")
 
         /*const token = localStorage.getItem("token");
         if(token){
@@ -21,7 +20,7 @@ function App() {
         else {
             navigate("/auth")
         }*/
-    }, [dispatch, navigate])
+    }, [dispatch, navigate]);
     useEffect(() => {
         if (appState.token) {
             navigate("/chat")

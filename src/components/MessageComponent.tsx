@@ -8,7 +8,9 @@ import {RootState} from "@Helpers/toolkitRedux";
 const MessageComponent = ({message}: { message: Message }) => {
     const userMe = useSelector((state: RootState) => state.toolkit.user);
     const avatarUrl = message.user ? generateAvatar(message.user.login, message.user.name) : ""
+    const openPanel = () =>{
 
+    }
     return (
         <div className={"message-block " + (userMe?.id === message.userId && "my-message")}>
             <div className={"message-component"}>
