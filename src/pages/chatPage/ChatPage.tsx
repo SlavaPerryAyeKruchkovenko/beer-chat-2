@@ -56,7 +56,6 @@ const ChatPage = () => {
             if (token) {
                 apiManager.getAllChatMessage(token, chat.id).then(res => {
                     if (res.data) {
-                        console.log(res.data as Message[])
                         setMessages(res.data as Message[])
                     }
                 })

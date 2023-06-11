@@ -22,6 +22,7 @@ class ApiManager {
         },this.getDefaultConfig())
     }
     sendMessage(token:string,message:Message){
+        console.log(message.text,message.userId,message.chatroomId)
         return axios.post(apiUrl+"api/Message",{
             text: message.text,
             userId: message.userId,
