@@ -29,6 +29,7 @@ const AuthPage = () => {
     }
     const loginSubmit = React.useCallback((e: any) => {
         e.preventDefault();
+        console.log(login,password)
         apiManager.login(login, password).then(res => {
             if (res.data) {
                 initUser(res)
