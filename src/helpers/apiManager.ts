@@ -9,15 +9,15 @@ class ApiManager {
 
     login(login: string, password: string) {
         return axios.post(apiUrl + "api/Auth/login", {
-            Login: login,
-            Password: password
+            login: login,
+            password: password
         })
     }
     register(user:User,password: string){
         return axios.post(apiUrl + "api/Auth/reg", {
-            Name : user.Name,
-            Login: user.Login,
-            Password: password
+            name : user.Name,
+            login: user.Login,
+            password: password
         })
     }
     getAllChats(userId:string,token:string){
