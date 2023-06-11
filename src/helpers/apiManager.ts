@@ -3,8 +3,8 @@ import {apiUrl} from "@Helpers/constants";
 import User from "@Models/User";
 
 class ApiManager {
-    getAllUsers() {
-        return axios.get(apiUrl + "api/User/users")
+    getAllUsers(token:string) {
+        return axios.get(apiUrl + "api/User/users",this.getConfig(token))
     }
 
     login(login: string, password: string) {
@@ -20,8 +20,17 @@ class ApiManager {
             Password: password
         })
     }
-    getAllChats(userId:string){
-        return axios.get(apiUrl + `api/User/${userId}/chat`)
+    getAllChats(userId:string,token:string){
+        return axios.get(apiUrl + `api/User/${userId}/chats`,this.getConfig(token))
+    }
+    getConfig(token:string) {
+        return {
+            headers: {
+                Authorization: "Bearer " + token,
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
     }
 }
 

@@ -13,11 +13,12 @@ const ChatPage = () => {
     const [userMessages, setUserMessages] = useState([])
     const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
     const [users, setUsers] = useState<User[]>([])
-    const [message,setMessage] = useState("");
+    const [message, setMessage] = useState("");
 
+    const token = useSelector((state: RootState) => state.toolkit.token);
     const navigate = useNavigate();
     const userMe = useSelector((state: RootState) => state.toolkit.user);
-    
+
     const getUserProfile = (user: User) => {
         const avatarUrl = `https://www.gravatar.com/avatar/${user.Login}?d=https://ui-avatars.com/api/${user.Name}/128/random`
         return <div className={"user-profile"} id={user.Id} key={user.Id} onClick={() => selectUser(user)}>
@@ -45,46 +46,45 @@ const ChatPage = () => {
     }
     const sendMessage = async (e: any) => {
         e.preventDefault()
-        console.log("send message on back",{ selectedUser, message })
-        await connection.invoke("SendMessage", { selectedUser, message });
+        console.log("send message on back", {selectedUser, message})
+        await connection.invoke("SendMessage", {selectedUser, message});
     }
-    useEffect(()=>{
+    useEffect(() => {
         connection.on("SendMessage", (message) => {
-            console.log("message from back",message);
+            console.log("message from back", message);
         });
         connection.onclose(() => {
             console.log("connection close")
             setUserMessages([]);
             setUsers([]);
         });
-    },[])
+    }, [])
 
     useEffect(() => {
-        console.log("current user",userMe)
-        if(userMe){
-            apiManager.getAllChats(userMe.Id).then(res => {
-                if(res.data){
+        console.log("current user", userMe)
+        if (userMe && token) {
+            apiManager.getAllChats(userMe.Id, token).then(res => {
+                if (res.data) {
                     console.log(res.data)
                 }
             }).catch(e => {
                 console.log("get all chat error", e)
             })
         }
-        else{
-            navigate("/auth")
-        }
         setUsers([{Id: "1", Name: "Danil", Login: "not_lizard"}, {Id: "2", Name: "Nad9", Login: "baikal"}])
-    }, [navigate, userMe]);
+    }, [navigate, token, userMe]);
 
     useEffect(() => {
-        apiManager.getAllUsers().then(res => {
-            if (res.data) {
-                console.log("all users",res.data);
-            }
-        }).catch(e => {
-            console.log("get all user error", e)
-        })
-    }, []);
+        if (token) {
+            apiManager.getAllUsers(token).then(res => {
+                if (res.data) {
+                    console.log("all users", res.data);
+                }
+            }).catch(e => {
+                console.log("get all user error", e)
+            })
+        }
+    }, [token]);
     return <div className={"chat-page"}>
         <div className={"user-column"}>
             <div className={"search-bar"}>
@@ -107,7 +107,7 @@ const ChatPage = () => {
                     className={"text-input"}
                     placeholder={"type your message"}
                     value={message}
-                    onChange={(e:any)=>setMessage(e.target.value)}
+                    onChange={(e: any) => setMessage(e.target.value)}
                 />
                 <div className={"send-panel"}>
                     <FilePlus className={"icon"}/>
