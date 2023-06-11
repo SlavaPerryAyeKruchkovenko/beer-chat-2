@@ -34,6 +34,7 @@ const AuthPage = () => {
                 initUser(res)
             }
         }).catch(e => {
+            console.log(e)
             setLogin("")
             setPassword("")
         })
