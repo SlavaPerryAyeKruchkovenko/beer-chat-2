@@ -40,8 +40,8 @@ const ChatPage = () => {
         }
     }
     const selectChat = (chat: Chat) => {
-        if(connection){
-            connection.stop().then(()=>console.log("close"))
+        if (connection) {
+            connection.stop().then(() => console.log("close"))
         }
         setSelectedChat(chat);
         const connect = joinRoom(chat.id)
@@ -54,14 +54,22 @@ const ChatPage = () => {
 
     const sendMessage = async (e: any) => {
         e.preventDefault()
-        if (selectedChat && connection) {
-            setMessage("")
-            const chatId = selectedChat.id
-            await connection.invoke("SendMessage", chatId, message);
+        if (userMe && token && selectedChat) {
+            const val = {
+                id: "1",
+                text: message,
+                userId: userMe.Id,
+                chatroomId: selectedChat.id
+            }
+            apiManager.sendMessage(token, val).then(res => {
+                if (res.data) {
+                    setMessage("")
+                }
+            })
         }
     }
     useEffect(() => {
-        if(connection){
+        if (connection) {
             connection.on("SendMessage", (message) => {
                 console.log("message from back", message);
             });
