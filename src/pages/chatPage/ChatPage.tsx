@@ -5,12 +5,17 @@ import {FilePlus, Search} from 'feather-icons-react';
 import User from "@Models/User";
 import apiManager from "@Helpers/apiManager";
 import {connection} from "@Helpers/socketManager";
+import {useSelector} from "react-redux";
+import {RootState} from "@Helpers/toolkitRedux";
 
 const ChatPage = () => {
     const [userMessages, setUserMessages] = useState([])
     const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
     const [users, setUsers] = useState<User[]>([])
-    const [message,setMessage] = useState("")
+    const [message,setMessage] = useState("");
+    
+    const userMe = useSelector((state: RootState) => state.toolkit.user);
+    
     const getUserProfile = (user: User) => {
         const avatarUrl = `https://www.gravatar.com/avatar/${user.Login}?d=https://ui-avatars.com/api/${user.Name}/128/random`
         return <div className={"user-profile"} id={user.Id} key={user.Id} onClick={() => selectUser(user)}>
@@ -54,8 +59,18 @@ const ChatPage = () => {
 
 
     useEffect(() => {
+        if(userMe){
+            apiManager.getAllChats(userMe.Id).then(res => {
+                if(res.data){
+                    console.log(res.data)
+                }
+            }).catch(e => {
+                console.log("get all chat error", e)
+            })
+        }
+       
         setUsers([{Id: "1", Name: "Danil", Login: "not_lizard"}, {Id: "2", Name: "Nad9", Login: "baikal"}])
-    }, []);
+    }, [userMe]);
 
     useEffect(() => {
         apiManager.getAllUsers().then(res => {

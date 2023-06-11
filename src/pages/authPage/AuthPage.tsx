@@ -4,6 +4,9 @@ import beachImage from "@Assets/images/beach-back.jpg";
 import {X} from "react-feather";
 import apiManager from "@Helpers/apiManager";
 import User from "@Models/User";
+import {setToken, setUser} from "@Helpers/toolkitRedux/toolkitReducer";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 const AuthPage = () => {
     const [login, setLogin] = React.useState("");
@@ -11,18 +14,31 @@ const AuthPage = () => {
     const [repeatPassword, setRepeatPassword] = React.useState("");
     const [name, setName] = React.useState("");
     const [isLogin, setIsLogin] = React.useState(true)
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
+    const initUser = (res: any) => {
+        window.localStorage.setItem("token",res.data.jwt);
+        dispatch(setToken(res.data.jwt));
+        setUser({
+            Id: res.data.user.id,
+            Name: res.data.user.name,
+            Login: res.data.user.Login
+        });
+        navigate("/chat")
+    }
     const loginSubmit = React.useCallback((e: any) => {
         e.preventDefault();
-        console.log("password",password)
         apiManager.login(login, password).then(res => {
-            console.log(res.data)
+            if (res.data) {
+                initUser(res)
+            }
         }).catch(e => {
             setLogin("")
             setPassword("")
             console.log("login error", e)
         })
-    }, [login, password]);
+    }, [initUser, login, password]);
     const registerSubmit = React.useCallback((e: any) => {
         e.preventDefault();
         const user: User = {
@@ -30,15 +46,14 @@ const AuthPage = () => {
             Name: name,
             Login: login,
         }
-        console.log("password",password)
         apiManager.register(user, password).then(res => {
-            console.log(res.data)
+            initUser(res)
         }).catch(e => {
             setLogin("")
             setPassword("")
             console.log("register error", e)
         })
-    }, [login, name, password]);
+    }, [initUser, login, name, password]);
     const authStyle = {
         backgroundImage: `url(${beachImage})`
     }

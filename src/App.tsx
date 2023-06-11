@@ -1,14 +1,30 @@
 import React, {useEffect} from 'react';
-import {Route, Routes} from 'react-router-dom';
+import {Route, Routes, useNavigate} from 'react-router-dom';
 import './App.sass';
 import AuthPage from "@Pages/authPage/AuthPage";
 import ChatPage from "@Pages/chatPage/ChatPage";
-import {startSignalRConnection} from "@Helpers/socketManager";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@Helpers/toolkitRedux";
 
 function App() {
-    useEffect(()=>{
-        startSignalRConnection()
-    },[])
+    const appState = useSelector((state: RootState) => state.toolkit);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        navigate("/auth")
+        /*const token = localStorage.getItem("token");
+        if(token){
+            dispatch(setToken(token));
+        }
+        else {
+            navigate("/auth")
+        }*/
+    }, [dispatch, navigate])
+    useEffect(() => {
+        if (appState.token) {
+            navigate("/chat")
+        }
+    }, [appState.token, navigate])
     return (
         <Routes>
             <Route path="*" element={<div>error</div>}/>

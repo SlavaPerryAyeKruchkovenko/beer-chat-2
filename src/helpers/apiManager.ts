@@ -20,6 +20,9 @@ class ApiManager {
             Password: password
         })
     }
+    getAllChats(userId:string){
+        return axios.get(apiUrl + `api/User/${userId}/chat`)
+    }
 }
 
 export default new ApiManager()
