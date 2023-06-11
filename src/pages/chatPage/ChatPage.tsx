@@ -9,11 +9,13 @@ import {RootState} from "@Helpers/toolkitRedux";
 import {useNavigate} from "react-router-dom";
 import Chat from "@Models/Chat";
 import {HubConnection} from "@aspnet/signalr";
+import Message from "@Models/Message";
 
 const ChatPage = () => {
     const [chats, setChats] = useState<Chat[]>([])
     const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
     const [message, setMessage] = useState("");
+    const [messages,setMessages] = useState<Message[]>([])
     const [connection, setConnection] = useState<HubConnection | undefined>(undefined)
     const token = useSelector((state: RootState) => state.toolkit.token);
     const navigate = useNavigate();
@@ -41,6 +43,7 @@ const ChatPage = () => {
     }
     const selectChat = (chat: Chat) => {
         if (connection) {
+            setMessages([])
             connection.stop().then(() => console.log("close"))
         }
         setSelectedChat(chat);
@@ -49,6 +52,13 @@ const ChatPage = () => {
         connect.start().then(() => {
             console.log('SignalR Connected')
             setConnection(connect)
+            if(token){
+                apiManager.getAllChatMessage(token,chat.id).then(res => {
+                    if(res.data){
+                        console.log(res.data)
+                    }
+                })
+            }
         }).catch(err => console.error('SignalR Connection Error: ', err));
     }
 
@@ -68,6 +78,7 @@ const ChatPage = () => {
             })
         }
     }
+
     useEffect(() => {
         if (connection) {
             connection.on("SendMessage", (message) => {

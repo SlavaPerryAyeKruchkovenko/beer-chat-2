@@ -28,6 +28,9 @@ class ApiManager {
             chatId: message.chatroomId
         },this.getConfig(token))
     }
+    getAllChatMessage(token:string,chatId:string){
+        return axios.get(apiUrl+`api/Chat/${chatId}/messages`,this.getConfig(token))
+    }
     getAllChats(userId:string,token:string){
         return axios.get(apiUrl + `api/User/${userId}/chats`,this.getConfig(token))
     }
