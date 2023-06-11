@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import Message from "@Models/Message";
 import generateAvatar from "@Helpers/avatarGenerate";
 import "./MessageComponent.sass";
@@ -8,7 +8,9 @@ import {RootState} from "@Helpers/toolkitRedux";
 const MessageComponent = ({message}: { message: Message }) => {
     const userMe = useSelector((state: RootState) => state.toolkit.user);
     const avatarUrl = message.user ? generateAvatar(message.user?.Login, message.user?.Name) : ""
-
+    useEffect(()=>{
+        console.log(message.user)
+    },[])
     return (
         <div className={"message-block " + (userMe?.Id === message.userId && "my-message")}>
             <div className={"message-component"}>
