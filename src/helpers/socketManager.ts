@@ -1,4 +1,4 @@
-import signalR, {HubConnectionBuilder} from '@aspnet/signalr';
+import {HubConnectionBuilder} from '@aspnet/signalr';
 import {apiUrl} from "@Helpers/constants";
 
 export const joinRoom = (userId: string) => {

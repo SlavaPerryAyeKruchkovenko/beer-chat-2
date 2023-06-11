@@ -40,6 +40,9 @@ const ChatPage = () => {
         }
     }
     const selectChat = (chat: Chat) => {
+        if(connection){
+            connection.stop().then(()=>console.log("close"))
+        }
         if (userMe) {
             setSelectedChat(chat);
             const connect = joinRoom(userMe.Id)
@@ -55,7 +58,7 @@ const ChatPage = () => {
         e.preventDefault()
         if (selectedChat && connection) {
             const chatId = selectedChat.id
-            await connection.invoke("SendMessage", {chatId, message});
+            await connection.invoke("SendMessage", chatId, message);
         }
     }
     useEffect(() => {
