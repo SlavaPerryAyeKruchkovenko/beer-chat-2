@@ -16,3 +16,9 @@ declare module '*.eps' {
     export { ReactComponent };
     export default fileName;
 }
+declare module '*.png' {
+    const fileName: string;
+    const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export { ReactComponent };
+    export default fileName;
+}

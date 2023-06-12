@@ -71,7 +71,7 @@ const ChatPage = () => {
     const openChatModal = () => {
         setModal(<ChatModal onClose={() => setModal(undefined)} onConfirm={createChat}/>)
     }
-    const createChat = (title: string,users: User[]) => {
+    const createChat = (title: string, users: User[]) => {
         if (token) {
             apiManager.createChat(token, title, users).then(res => {
                 if (res.data) {
@@ -127,6 +127,13 @@ const ChatPage = () => {
     useEffect(() => {
         setSearchChats(chats.filter(x => x.title.includes(searchText)));
     }, [chats, searchText]);
+
+    useEffect(() => {
+        if (!token) {
+            navigate("/auth")
+        }
+    }, [navigate, token]);
+
     return <div className={"chat-page"}>
         <div className={"chat-column"}>
             <div className={"search-bar"}>

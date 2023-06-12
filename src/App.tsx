@@ -6,6 +6,7 @@ import ChatPage from "@Pages/chatPage/ChatPage";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@Helpers/toolkitRedux";
 import ErrorPage from "@Pages/errorPage/ErrorPage";
+import MainPage from "@Pages/MainPage/MainPage";
 
 function App() {
     const appState = useSelector((state: RootState) => state.toolkit);
@@ -21,14 +22,11 @@ function App() {
             navigate("/auth")
         }*/
     }, [dispatch, navigate]);
-    useEffect(() => {
-        if (appState.token) {
-            navigate("/chat")
-        }
-    }, [appState.token, navigate])
+
     return (
         <Routes>
             <Route path="*" element={<ErrorPage/>}/>
+            <Route path={"/"} element={<MainPage/>}/>
             <Route path="/auth" element={<AuthPage/>}/>
             <Route path="/chat" element={<ChatPage/>}/>
         </Routes>
