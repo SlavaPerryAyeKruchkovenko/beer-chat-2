@@ -45,7 +45,7 @@ const ChatModal = ({
         if (token) {
             apiManager.getAllUsers(token).then(res => {
                 if (res.data) {
-                    console.log("all users", res.data);
+                    setUsers(res.data as User[])
                 }
             })
         }
@@ -58,21 +58,6 @@ const ChatModal = ({
         }
     }, [searchText, users]);
 
-    useEffect(() => {
-        setUsers([{
-            id: '1',
-            name: 'slava',
-            login: "slava228"
-        }, {
-            id: '2',
-            name: 'danil',
-            login: "danil228"
-        }, {
-            id: '3',
-            name: 'timur',
-            login: "timur228"
-        }])
-    }, []);
     return <ChatPortal>
         <div className={"chat-modal-block"}>
             <div className={"chat-modal"}>
