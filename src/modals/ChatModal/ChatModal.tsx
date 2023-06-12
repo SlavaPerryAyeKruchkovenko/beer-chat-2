@@ -38,7 +38,7 @@ const ChatModal = ({
     const submitForm = (e: any) => {
         e.preventDefault()
         if (userMe) {
-            onConfirm("title", [...selectedUsers, userMe])
+            onConfirm(title, [...selectedUsers, userMe])
         }
     }
     useEffect(() => {

@@ -75,7 +75,7 @@ const ChatPage = () => {
         if (token) {
             apiManager.createChat(token, title, users).then(res => {
                 if (res.data) {
-                    console.log(res.data)
+                    setChats(value => [...value, res.data as Chat])
                     setModal(undefined);
                 }
             })
@@ -148,7 +148,7 @@ const ChatPage = () => {
                 <button className={"create-chat-btn"} onClick={openChatModal}>Create chat</button>
             </div>
             <ul className={"chats-block"}>
-                {searchChats.map(getChatProfile)}
+                {searchChats.filter(x => !x.isDelete).map(getChatProfile)}
             </ul>
         </div>
         <div className={"chat-block"}>
