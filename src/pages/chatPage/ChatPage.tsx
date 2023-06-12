@@ -13,6 +13,7 @@ import Message from "@Models/Message";
 import MessageComponent from "@Components/MessageComponent/MessageComponent";
 import generateAvatar from "@Helpers/avatarGenerate";
 import ChatModal from "@Modals/ChatModal/ChatModal";
+import User from "@Models/User";
 
 const ChatPage = () => {
     const [chats, setChats] = useState<Chat[]>([]);
@@ -68,7 +69,17 @@ const ChatPage = () => {
         }).catch(err => console.error('SignalR Connection Error: ', err));
     }
     const openChatModal = () => {
-        setModal(<ChatModal/>)
+        setModal(<ChatModal onClose={() => setModal(undefined)} onConfirm={createChat}/>)
+    }
+    const createChat = (title: string,users: User[]) => {
+        if (token) {
+            apiManager.createChat(token, title, users).then(res => {
+                if (res.data) {
+                    console.log(res.data)
+                    setModal(undefined);
+                }
+            })
+        }
     }
     const enterPress = async (e: any) => {
         if (e.key === "Enter") {
