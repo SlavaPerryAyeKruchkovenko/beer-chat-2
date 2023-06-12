@@ -3,8 +3,7 @@ import {Route, Routes, useNavigate} from 'react-router-dom';
 import './App.sass';
 import AuthPage from "@Pages/authPage/AuthPage";
 import ChatPage from "@Pages/chatPage/ChatPage";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "@Helpers/toolkitRedux";
+import {useDispatch} from "react-redux";
 import ErrorPage from "@Pages/errorPage/ErrorPage";
 import MainPage from "@Pages/MainPage/MainPage";
 import {setToken} from "@Helpers/toolkitRedux/toolkitReducer";
@@ -14,10 +13,9 @@ function App() {
     const dispatch = useDispatch();
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if(token){
+        if (token) {
             dispatch(setToken(token));
-        }
-        else {
+        } else {
             navigate("/auth")
         }
     }, [dispatch, navigate]);
