@@ -45,7 +45,8 @@ const ChatModal = ({
         if (token) {
             apiManager.getAllUsers(token).then(res => {
                 if (res.data) {
-                    setUsers(res.data as User[])
+                    const resUsers = res.data as User[]
+                    setUsers(resUsers.filter(x=>x.isBan))
                 }
             })
         }
