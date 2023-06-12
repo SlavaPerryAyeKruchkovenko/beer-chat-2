@@ -8,12 +8,28 @@
   box-sizing: border-box
   display: flex
 
-  .user-column
+  .chat-column
     height: 100%
     padding: 16px
     width: 20%
     box-sizing: border-box
     background: $rubin
+
+    .create-chat-block
+      width: 100%
+      margin-top: 8px
+      padding: 8px 0
+
+      .create-chat-btn
+        cursor: pointer
+        font-family: "Roboto", sans-serif
+        font-weight: 400
+        background: whitesmoke
+        font-size: 18px
+        line-height: 20px
+        width: 100%
+        padding: 8px 4px
+        border-radius: 8px
 
     .search-bar
       margin-top: 8px
@@ -52,7 +68,7 @@
 
 .chats-block
   box-sizing: border-box
-  height: calc(100% - 64px)
+  height: calc(100% - 120px)
   margin-top: 16px
   width: 100%
   border-radius: 8px
@@ -108,12 +124,14 @@
       width: 60px
       border-radius: 50%
       border: 2px dashed forestgreen
+
     .info-bloc
       font-size: 24px
       line-height: 32px
       margin-left: 12px
       display: flex
       flex-direction: column
+
       .description
         color: gray
         font-size: 18px

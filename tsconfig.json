@@ -38,6 +38,12 @@
       ],
       "@Styles/*": [
         "./styles/*"
+      ],
+      "@Modals/*": [
+        "./modals/*"
+      ],
+      "@Portals/*": [
+        "./portals/*"
       ]
     }
   },

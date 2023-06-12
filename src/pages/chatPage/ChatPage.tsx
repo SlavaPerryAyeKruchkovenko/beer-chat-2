@@ -10,15 +10,20 @@ import {useNavigate} from "react-router-dom";
 import Chat from "@Models/Chat";
 import {HubConnection} from "@aspnet/signalr";
 import Message from "@Models/Message";
-import MessageComponent from "@Components/MessageComponent";
+import MessageComponent from "@Components/MessageComponent/MessageComponent";
 import generateAvatar from "@Helpers/avatarGenerate";
+import ChatModal from "@Modals/ChatModal/ChatModal";
 
 const ChatPage = () => {
-    const [chats, setChats] = useState<Chat[]>([])
-    const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
+    const [chats, setChats] = useState<Chat[]>([]);
+    const [searchChats, setSearchChats] = useState<Chat[]>([]);
+    const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined);
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState<Message[]>([])
-    const [connection, setConnection] = useState<HubConnection | undefined>(undefined)
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [connection, setConnection] = useState<HubConnection | undefined>(undefined);
+    const [searchText, setSearchText] = useState<string>("");
+    const [modal, setModal] = useState<JSX.Element | undefined>(undefined);
+
     const token = useSelector((state: RootState) => state.toolkit.token);
     const navigate = useNavigate();
     const userMe = useSelector((state: RootState) => state.toolkit.user);
@@ -45,7 +50,7 @@ const ChatPage = () => {
     }
     const selectChat = (chat: Chat) => {
         if (connection) {
-            setMessages([])
+            setMessages([]);
             connection.stop().then(() => console.log("close"))
         }
         setSelectedChat(chat);
@@ -62,7 +67,14 @@ const ChatPage = () => {
             }
         }).catch(err => console.error('SignalR Connection Error: ', err));
     }
-
+    const openChatModal = () => {
+        setModal(<ChatModal/>)
+    }
+    const enterPress = async (e: any) => {
+        if (e.key === "Enter") {
+            await sendMessage(e)
+        }
+    }
     const sendMessage = async (e: any) => {
         e.preventDefault()
         if (userMe && token && selectedChat) {
@@ -101,25 +113,24 @@ const ChatPage = () => {
             })
         }
     }, [navigate, token, userMe]);
-    /*useEffect(() => {
-        if (token) {
-            apiManager.getAllUsers(token).then(res => {
-                if (res.data) {
-                    console.log("all users", res.data);
-                }
-            }).catch(e => {
-                console.log("get all user error", e)
-            })
-        }
-    }, [token]);*/
+    useEffect(() => {
+        setSearchChats(chats.filter(x => x.title.includes(searchText)));
+    }, [chats, searchText]);
     return <div className={"chat-page"}>
-        <div className={"user-column"}>
+        <div className={"chat-column"}>
             <div className={"search-bar"}>
-                <input type={"text"} maxLength={30}/>
+                <input
+                    type={"text"}
+                    maxLength={30}
+                    value={searchText}
+                    onChange={e => setSearchText(e.target.value)}/>
                 <Search className={"search"}/>
             </div>
+            <div className={"create-chat-block"}>
+                <button className={"create-chat-btn"} onClick={openChatModal}>Create chat</button>
+            </div>
             <ul className={"chats-block"}>
-                {chats.map(getChatProfile)}
+                {searchChats.map(getChatProfile)}
             </ul>
         </div>
         <div className={"chat-block"}>
@@ -131,6 +142,7 @@ const ChatPage = () => {
             </div>
             <form className={"messenger-input"} onSubmit={sendMessage}>
                 <textarea
+                    onKeyPress={enterPress}
                     className={"text-input"}
                     placeholder={"type your message"}
                     value={message}
@@ -140,6 +152,7 @@ const ChatPage = () => {
                     <FilePlus className={"icon"}/>
                     <button type={"submit"} className={"send"}>Send</button>
                 </div>
+                {modal}
             </form>
         </div>
     </div>

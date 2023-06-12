@@ -28,7 +28,9 @@ module.exports = {
             '@Assets': path.resolve(__dirname, './src/assets'),
             '@Styles': path.resolve(__dirname, './src/styles'),
             '@Helpers': path.resolve(__dirname, './src/helpers'),
-            '@Models': path.resolve(__dirname, "./src/models")
+            '@Models': path.resolve(__dirname, "./src/models"),
+            '@Modals': path.resolve(__dirname, "./src/modals"),
+            '@Portals': path.resolve(__dirname, "./src/portals")
         },
     },
     module: {
