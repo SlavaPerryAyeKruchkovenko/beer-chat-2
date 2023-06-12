@@ -41,6 +41,7 @@ const ChatPage = () => {
         </div>
     }
     const logout = () => {
+        localStorage.removeItem("token");
         dispatch(removeToken());
         dispatch(removeUser());
         navigate("/auth");

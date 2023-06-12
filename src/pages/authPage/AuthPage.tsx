@@ -51,7 +51,7 @@ const AuthPage = () => {
         }
         apiManager.register(user, password).then(res => {
             initUser(res)
-        }).catch(e => {
+        }).catch(() => {
             setLogin("")
             setPassword("")
         })

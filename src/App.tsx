@@ -7,20 +7,19 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@Helpers/toolkitRedux";
 import ErrorPage from "@Pages/errorPage/ErrorPage";
 import MainPage from "@Pages/MainPage/MainPage";
+import {setToken} from "@Helpers/toolkitRedux/toolkitReducer";
 
 function App() {
-    const appState = useSelector((state: RootState) => state.toolkit);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     useEffect(() => {
-
-        /*const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
         if(token){
             dispatch(setToken(token));
         }
         else {
             navigate("/auth")
-        }*/
+        }
     }, [dispatch, navigate]);
 
     return (
