@@ -4,7 +4,7 @@ import "./ChatPage.sass"
 import {FilePlus, Search} from 'feather-icons-react';
 import apiManager from "@Helpers/apiManager";
 import {joinRoom} from "@Helpers/socketManager";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@Helpers/toolkitRedux";
 import {useNavigate} from "react-router-dom";
 import Chat from "@Models/Chat";
@@ -14,6 +14,7 @@ import MessageComponent from "@Components/MessageComponent/MessageComponent";
 import generateAvatar from "@Helpers/avatarGenerate";
 import ChatModal from "@Modals/ChatModal/ChatModal";
 import User from "@Models/User";
+import {removeToken, removeUser} from "@Helpers/toolkitRedux/toolkitReducer";
 
 const ChatPage = () => {
     const [chats, setChats] = useState<Chat[]>([]);
@@ -28,6 +29,7 @@ const ChatPage = () => {
     const token = useSelector((state: RootState) => state.toolkit.token);
     const navigate = useNavigate();
     const userMe = useSelector((state: RootState) => state.toolkit.user);
+    const dispatch = useDispatch();
 
     const getChatProfile = (chat: Chat) => {
         const avatarUrl = generateAvatar(chat.title, chat.title);
@@ -38,14 +40,32 @@ const ChatPage = () => {
             </div>
         </div>
     }
+    const logout = () => {
+        dispatch(removeToken());
+        dispatch(removeUser());
+        navigate("/auth");
+        if (token) {
+            apiManager.logout(token).then(res => {
+                console.log("logout from back", res)
+            })
+        }
+    }
     const getHeader = () => {
         if (selectedChat) {
-            const avatarUrl = generateAvatar(selectedChat.title, selectedChat.title);
+            const avatarUrl = generateAvatar("selectedChat.title", "selectedChat.title");
             return <>
-                <img src={avatarUrl} alt={"image"} className={"user-image"}/>
-                <div className={"info-bloc"}>
-                    <span>{selectedChat.title}</span>
+                <div className={"header"}>
+                    <img src={avatarUrl} alt={"image"} className={"user-image"}/>
+                    <div className={"info-bloc"}>
+                        <span>{"selectedChat.title"}</span>
+                    </div>
                 </div>
+                <button className={"logout"} onClick={logout}>logout</button>
+            </>
+        } else {
+            return <>
+                <div/>
+                <button className={"logout"} onClick={logout}>logout</button>
             </>
         }
     }
@@ -57,7 +77,6 @@ const ChatPage = () => {
         setSelectedChat(chat);
         const connect = joinRoom(chat.id)
         connect.start().then(() => {
-            console.log('SignalR Connected')
             setConnection(connect)
             if (token) {
                 apiManager.getAllChatMessage(token, chat.id).then(res => {
@@ -164,7 +183,7 @@ const ChatPage = () => {
                     className={"text-input"}
                     placeholder={"type your message"}
                     value={message}
-                    onChange={(e: any) => setMessage(e.target.value)}
+                    onChange={e => setMessage(e.target.value)}
                 />
                 <div className={"send-panel"}>
                     <FilePlus className={"icon"}/>

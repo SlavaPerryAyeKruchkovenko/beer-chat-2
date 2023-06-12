@@ -23,7 +23,8 @@ const AuthPage = () => {
         dispatch(setUser({
             id: res.data.user.id,
             name: res.data.user.name,
-            login: res.data.user.Login
+            login: res.data.user.login,
+            isBan: res.data.user.isBan
         }));
         navigate("/chat")
     }
@@ -46,6 +47,7 @@ const AuthPage = () => {
             id: "1",
             name: name,
             login: login,
+            isBan: false
         }
         apiManager.register(user, password).then(res => {
             initUser(res)

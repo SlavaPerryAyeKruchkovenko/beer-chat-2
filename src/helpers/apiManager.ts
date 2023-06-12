@@ -47,7 +47,9 @@ class ApiManager {
     getAllChats(userId: string, token: string) {
         return axios.get(apiUrl + `api/User/${userId}/chats`, this.getConfig(token))
     }
-
+    logout(token:string){
+        return axios.post(apiUrl + `api/Auth/logout`, {}, this.getConfig(token))
+    }
     getConfig(token: string) {
         return {
             headers: {
