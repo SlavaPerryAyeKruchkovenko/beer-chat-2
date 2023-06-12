@@ -26,3 +26,4 @@ yarn-error.log*
 /.idea/vcs.xml
 /.idea/beer-chat-2.iml
 /.idea/modules.xml
+/hs_err_pid12984.log
