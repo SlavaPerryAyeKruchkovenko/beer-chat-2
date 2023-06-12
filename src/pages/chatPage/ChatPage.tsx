@@ -149,6 +149,7 @@ const ChatPage = () => {
     }, [chats, searchText]);
 
     useEffect(() => {
+        console.log("token",token)
         if (!token) {
             navigate("/auth")
         }
